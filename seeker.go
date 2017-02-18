@@ -2,13 +2,13 @@ package seeker
 
 func New(sz int) *Seeker {
 	var s Seeker
-	s.s = make([]*seekItem, 0, sz)
+	s.s = make([]seekItem, 0, sz)
 	s.end = -1
 	return &s
 }
 
 type Seeker struct {
-	s   []*seekItem
+	s   []seekItem
 	end int
 }
 
@@ -29,19 +29,19 @@ func (s *Seeker) Put(key string, val int) {
 	}
 
 	if idx > s.end {
-		s.s = append(s.s, &seekItem{key, val})
+		s.s = append(s.s, seekItem{key, val})
 	} else if idx == -1 {
-		var ip *seekItem
+		var ip seekItem
 		for i, item := range s.s {
 			s.s[i] = ip
 			ip = item
 		}
 
 		s.s = append(s.s, ip)
-		s.s[0] = &seekItem{key, val}
+		s.s[0] = seekItem{key, val}
 	} else {
 		s.s = append(s.s[:idx], s.s[idx-1:]...)
-		s.s[idx] = &seekItem{key, val}
+		s.s[idx] = seekItem{key, val}
 	}
 
 	s.end++
