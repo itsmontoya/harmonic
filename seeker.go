@@ -2,13 +2,13 @@ package seeker
 
 func New(sz int) *Seeker {
 	var s Seeker
-	s.s = make([]*seekItem, 0, sz)
+	s.s = make([]seekItem, 0, sz)
 	s.end = -1
 	return &s
 }
 
 type Seeker struct {
-	s   []*seekItem
+	s   []seekItem
 	end int
 }
 
@@ -29,19 +29,19 @@ func (s *Seeker) Put(key string, val int) {
 	}
 
 	if idx > s.end {
-		s.s = append(s.s, &seekItem{key, val})
+		s.s = append(s.s, seekItem{key, val})
 	} else if idx == -1 {
-		var ip *seekItem
+		var ip seekItem
 		for i, item := range s.s {
 			s.s[i] = ip
 			ip = item
 		}
 
 		s.s = append(s.s, ip)
-		s.s[0] = &seekItem{key, val}
+		s.s[0] = seekItem{key, val}
 	} else {
 		s.s = append(s.s[:idx], s.s[idx-1:]...)
-		s.s[idx] = &seekItem{key, val}
+		s.s[idx] = seekItem{key, val}
 	}
 
 	s.end++
@@ -76,9 +76,10 @@ func (s *Seeker) seek2(key string, start, end int) (idx int, found bool) {
 
 	idx = (start + end) / 2
 
-	if key > s.s[idx].key {
+	it := &s.s[idx]
+	if key > it.key {
 		return s.seek2(key, idx, end)
-	} else if key < s.s[idx].key {
+	} else if key < it.key {
 		return s.seek2(key, start, idx)
 	} else {
 		found = true
@@ -88,9 +89,10 @@ func (s *Seeker) seek2(key string, start, end int) (idx int, found bool) {
 
 func (s *Seeker) seek3(key string, start int) (idx int, found bool) {
 	for idx = start; idx <= s.end; idx++ {
-		if key > s.s[idx].key {
+		it := &s.s[idx]
+		if key > it.key {
 			continue
-		} else if key < s.s[idx].key {
+		} else if key < it.key {
 			return
 		} else {
 			found = true
