@@ -76,9 +76,10 @@ func (s *Seeker) seek2(key string, start, end int) (idx int, found bool) {
 
 	idx = (start + end) / 2
 
-	if key > s.s[idx].key {
+	it := &s.s[idx]
+	if key > it.key {
 		return s.seek2(key, idx, end)
-	} else if key < s.s[idx].key {
+	} else if key < it.key {
 		return s.seek2(key, start, idx)
 	} else {
 		found = true
@@ -88,9 +89,10 @@ func (s *Seeker) seek2(key string, start, end int) (idx int, found bool) {
 
 func (s *Seeker) seek3(key string, start int) (idx int, found bool) {
 	for idx = start; idx <= s.end; idx++ {
-		if key > s.s[idx].key {
+		it := &s.s[idx]
+		if key > it.key {
 			continue
-		} else if key < s.s[idx].key {
+		} else if key < it.key {
 			return
 		} else {
 			found = true
