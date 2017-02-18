@@ -53,6 +53,7 @@ func (s *Seeker) ForEach(fn func(key string, val int)) {
 	}
 }
 
+// I'm aware my naming is awful, just getting the proof of concept working. I'll clean this all up shortly, I promise
 func (s *Seeker) seek(key string) (idx int, found bool) {
 	// Fast track for keys which occur AFTER our tail
 	if s.end == -1 || key > s.s[s.end].key {
@@ -65,43 +66,36 @@ func (s *Seeker) seek(key string) (idx int, found bool) {
 		return
 	}
 
-	var state int8
-	idx = s.end / 2
-	delta := idx / 2
+	return s.seek2(key, 0, s.end)
+}
 
-	for {
-		item := s.s[idx]
-		if delta /= 2; delta == 0 {
-			delta = 1
-		}
+func (s *Seeker) seek2(key string, start, end int) (idx int, found bool) {
+	if end-start < 3 {
+		return s.seek3(key, start)
+	}
 
-		if item.key < key {
-			if delta == 1 {
-				if state == 1 {
-					idx++
-					return
-				}
-			}
+	idx = (start + end) / 2
 
-			idx += delta
-			state = -1
-		} else if item.key > key {
-			if delta == 1 {
-				if state == -1 {
-					return
-				}
-			}
+	if key > s.s[idx].key {
+		return s.seek2(key, idx, end)
+	} else if key < s.s[idx].key {
+		return s.seek2(key, start, idx)
+	} else {
+		found = true
+		return
+	}
+}
 
-			idx -= delta
-			state = 1
+func (s *Seeker) seek3(key string, start int) (idx int, found bool) {
+	for idx = start; idx <= s.end; idx++ {
+		if key > s.s[idx].key {
+			continue
+		} else if key < s.s[idx].key {
+			return
 		} else {
 			found = true
 			return
 		}
-
-		//		if half < 1 {
-		//			half = 1
-		//		}
 	}
 
 	return

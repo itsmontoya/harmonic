@@ -12,27 +12,43 @@ import (
 	"sort"
 )
 
-var sorted = getSorted(10000)
+const testCount = 10000
+
+var sorted = getSorted(testCount)
 var reversed = getReversed(sorted)
 var randomized = getRandomized(sorted)
 
 var testVal int
+
+//var testSeeker *Seeker
 var testSeeker = populateSeeker(sorted)
+
 var testBTree = populateBtree(sorted)
 var testMap = populateMap(sorted)
 
 func TestMain(m *testing.M) {
-	testSeeker = New(10000)
 	m.Run()
 	os.Exit(0)
 }
 
 func TestGet(t *testing.T) {
-	s := New(100)
-	s.Put("a", 1)
-	s.Put("b", 2)
-	s.Put("c", 3)
-	fmt.Println(s.Get("b"))
+	/*
+		s := New(3)
+		s.Put("a", 1)
+		s.Put("h", 8)
+		s.Put("b", 2)
+		s.Put("c", 3)
+		s.Put("d", 4)
+		s.Put("e", 5)
+		s.Put("f", 6)
+		s.Put("g", 7)
+
+		s.ForEach(func(key string, val int) {
+			fmt.Println(key, val)
+		})
+	*/
+
+	fmt.Println(testSeeker.Get("9999"))
 }
 
 func BenchmarkSeekerSortedGet(b *testing.B) {
@@ -116,9 +132,9 @@ func benchmarkMapGet(b *testing.B, m map[string]int) {
 
 func benchmarkSeekerPut(b *testing.B, list []string) {
 	for i := 0; i < b.N; i++ {
-		s := New(10000)
+		s := New(testCount)
 
-		for j := 0; j < 10000; j++ {
+		for j := 0; j < testCount; j++ {
 			s.Put(list[j], j)
 		}
 	}
@@ -130,7 +146,7 @@ func benchmarkBtreePut(b *testing.B, list []string) {
 	for i := 0; i < b.N; i++ {
 		bt := btree.New(2)
 
-		for j := 0; j < 10000; j++ {
+		for j := 0; j < testCount; j++ {
 			bt.ReplaceOrInsert(btreeItem{list[j], j})
 		}
 	}
@@ -140,9 +156,9 @@ func benchmarkBtreePut(b *testing.B, list []string) {
 
 func benchmarkMapPut(b *testing.B, list []string) {
 	for i := 0; i < b.N; i++ {
-		m := make(map[string]int, 10000)
+		m := make(map[string]int, testCount)
 
-		for j := 0; j < 10000; j++ {
+		for j := 0; j < testCount; j++ {
 			m[list[j]] = i
 		}
 	}
