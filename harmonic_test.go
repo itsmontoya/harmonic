@@ -1,4 +1,4 @@
-package seeker
+package harmonic
 
 import (
 	"fmt"
@@ -20,9 +20,8 @@ var randomized = getRandomized(sorted)
 
 var testVal int
 
-//var testSeeker *Seeker
-var testSeeker = populateSeeker(sorted)
-
+//var testHarmonic *Harmonic
+var testHarmonic = populateHarmonic(sorted)
 var testBTree = populateBtree(sorted)
 var testMap = populateMap(sorted)
 
@@ -32,31 +31,15 @@ func TestMain(m *testing.M) {
 }
 
 func TestGet(t *testing.T) {
-	/*
-		s := New(3)
-		s.Put("a", 1)
-		s.Put("h", 8)
-		s.Put("b", 2)
-		s.Put("c", 3)
-		s.Put("d", 4)
-		s.Put("e", 5)
-		s.Put("f", 6)
-		s.Put("g", 7)
-
-		s.ForEach(func(key string, val int) {
-			fmt.Println(key, val)
-		})
-	*/
-
-	fmt.Println(testSeeker.Get("9999"))
+	fmt.Println(testHarmonic.Get("9999"))
 }
 
-func BenchmarkSeekerSortedGet(b *testing.B) {
-	benchmarkSeekerGet(b, testSeeker)
+func BenchmarkHarmonicSortedGet(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic)
 }
 
-func BenchmarkSeekerSortedPut(b *testing.B) {
-	benchmarkSeekerPut(b, sorted)
+func BenchmarkHarmonicSortedPut(b *testing.B) {
+	benchmarkHarmonicPut(b, sorted)
 }
 
 func BenchmarkBtreeSortedGet(b *testing.B) {
@@ -75,8 +58,8 @@ func BenchmarkMapSortedPut(b *testing.B) {
 	benchmarkMapPut(b, sorted)
 }
 
-func BenchmarkSeekerReversePut(b *testing.B) {
-	benchmarkSeekerPut(b, reversed)
+func BenchmarkHarmonicReversePut(b *testing.B) {
+	benchmarkHarmonicPut(b, reversed)
 }
 
 func BenchmarkBtreeReversePut(b *testing.B) {
@@ -87,8 +70,8 @@ func BenchmarkMapReversePut(b *testing.B) {
 	benchmarkMapPut(b, reversed)
 }
 
-func BenchmarkSeekerRandPut(b *testing.B) {
-	benchmarkSeekerPut(b, randomized)
+func BenchmarkHarmonicRandPut(b *testing.B) {
+	benchmarkHarmonicPut(b, randomized)
 }
 
 func BenchmarkBtreeRandPut(b *testing.B) {
@@ -99,10 +82,10 @@ func BenchmarkMapRandPut(b *testing.B) {
 	benchmarkMapPut(b, randomized)
 }
 
-func benchmarkSeekerGet(b *testing.B, s *Seeker) {
+func benchmarkHarmonicGet(b *testing.B, h *Harmonic) {
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < len(sorted); j++ {
-			testVal, _ = s.Get(sorted[j])
+			testVal, _ = h.Get(sorted[j])
 		}
 	}
 
@@ -130,12 +113,12 @@ func benchmarkMapGet(b *testing.B, m map[string]int) {
 	b.ReportAllocs()
 }
 
-func benchmarkSeekerPut(b *testing.B, list []string) {
+func benchmarkHarmonicPut(b *testing.B, list []string) {
 	for i := 0; i < b.N; i++ {
-		s := New(testCount)
+		h := New(testCount)
 
 		for j := 0; j < testCount; j++ {
-			s.Put(list[j], j)
+			h.Put(list[j], j)
 		}
 	}
 
@@ -206,10 +189,10 @@ func (bi btreeItem) Less(item btree.Item) bool {
 	return nbi.key < bi.key
 }
 
-func populateSeeker(list []string) (s *Seeker) {
-	s = New(len(list))
+func populateHarmonic(list []string) (h *Harmonic) {
+	h = New(len(list))
 	for i := 0; i < len(list); i++ {
-		s.Put(list[i], i)
+		h.Put(list[i], i)
 	}
 
 	return

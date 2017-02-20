@@ -1,13 +1,13 @@
-# Seeker
-Seeker is a simple sorted flat data store. This is still quite a work in progress, much improvement is yet to be made.
+# Harmonic
+Harmonic is a simple sorted flat data store. This is still quite a work in progress, much improvement is yet to be made.
 
 ## Benchmarks
 ```
-# Seeker
-BenchmarkSeekerSortedGet-4    	     500	   2726619 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSeekerSortedPut-4    	    2000	    834277 ns/op	  401921 B/op	   10001 allocs/op
-BenchmarkSeekerReversePut-4   	      20	  93772086 ns/op	  401920 B/op	   10001 allocs/op
-BenchmarkSeekerRandPut-4      	     100	  15090947 ns/op	  401920 B/op	   10001 allocs/op
+# Harmonic
+BenchmarkHarmonicSortedGet-4    	     500	   2726619 ns/op	       0 B/op	       0 allocs/op
+BenchmarkHarmonicSortedPut-4    	    2000	    834277 ns/op	  401921 B/op	   10001 allocs/op
+BenchmarkHarmonicReversePut-4   	      20	  93772086 ns/op	  401920 B/op	   10001 allocs/op
+BenchmarkHarmonicRandPut-4      	     100	  15090947 ns/op	  401920 B/op	   10001 allocs/op
 
 # Google's BTree
 BenchmarkBtreeSortedGet-4     	     200	   8601598 ns/op	  320000 B/op	   10000 allocs/op
