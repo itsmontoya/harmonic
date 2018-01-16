@@ -7,12 +7,22 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/google/btree"
 	"os"
 	"sort"
+
+	"github.com/google/btree"
 )
 
 const testCount = 10000
+
+var (
+	sorted10      = getSorted(10)
+	sorted100     = getSorted(100)
+	sorted1000    = getSorted(1000)
+	sorted10000   = getSorted(10000)
+	sorted100000  = getSorted(100000)
+	sorted1000000 = getSorted(1000000)
+)
 
 var sorted = getSorted(testCount)
 var reversed = getReversed(sorted)
@@ -34,8 +44,28 @@ func TestGet(t *testing.T) {
 	fmt.Println(testHarmonic.Get("9999"))
 }
 
-func BenchmarkHarmonicSortedGet(b *testing.B) {
-	benchmarkHarmonicGet(b, testHarmonic)
+func BenchmarkHarmonicSortedGet_10(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic, sorted10)
+}
+
+func BenchmarkHarmonicSortedGet_100(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic, sorted100)
+}
+
+func BenchmarkHarmonicSortedGet_1000(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic, sorted1000)
+}
+
+func BenchmarkHarmonicSortedGet_10000(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic, sorted10000)
+}
+
+func BenchmarkHarmonicSortedGet_100000(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic, sorted100000)
+}
+
+func BenchmarkHarmonicSortedGet_1000000(b *testing.B) {
+	benchmarkHarmonicGet(b, testHarmonic, sorted1000000)
 }
 
 func BenchmarkHarmonicSortedPut(b *testing.B) {
@@ -50,8 +80,28 @@ func BenchmarkBtreeSortedPut(b *testing.B) {
 	benchmarkBtreePut(b, sorted)
 }
 
-func BenchmarkMapSortedGet(b *testing.B) {
-	benchmarkMapGet(b, testMap)
+func BenchmarkMapSortedGet_10(b *testing.B) {
+	benchmarkMapGet(b, testMap, sorted10)
+}
+
+func BenchmarkMapSortedGet_100(b *testing.B) {
+	benchmarkMapGet(b, testMap, sorted100)
+}
+
+func BenchmarkMapSortedGet_1000(b *testing.B) {
+	benchmarkMapGet(b, testMap, sorted1000)
+}
+
+func BenchmarkMapSortedGet_10000(b *testing.B) {
+	benchmarkMapGet(b, testMap, sorted10000)
+}
+
+func BenchmarkMapSortedGet_100000(b *testing.B) {
+	benchmarkMapGet(b, testMap, sorted100000)
+}
+
+func BenchmarkMapSortedGet_1000000(b *testing.B) {
+	benchmarkMapGet(b, testMap, sorted1000000)
 }
 
 func BenchmarkMapSortedPut(b *testing.B) {
@@ -82,10 +132,10 @@ func BenchmarkMapRandPut(b *testing.B) {
 	benchmarkMapPut(b, randomized)
 }
 
-func benchmarkHarmonicGet(b *testing.B, h *Harmonic) {
+func benchmarkHarmonicGet(b *testing.B, h *Harmonic, list []string) {
 	for i := 0; i < b.N; i++ {
-		for j := 0; j < len(sorted); j++ {
-			testVal, _ = h.Get(sorted[j])
+		for j := 0; j < len(list); j++ {
+			testVal, _ = h.Get(list[j])
 		}
 	}
 
@@ -103,10 +153,10 @@ func benchmarkBtreeGet(b *testing.B, bt *btree.BTree) {
 	b.ReportAllocs()
 }
 
-func benchmarkMapGet(b *testing.B, m map[string]int) {
+func benchmarkMapGet(b *testing.B, m map[string]int, list []string) {
 	for i := 0; i < b.N; i++ {
-		for j := 0; j < len(sorted); j++ {
-			testVal = m[sorted[j]]
+		for j := 0; j < len(list); j++ {
+			testVal = m[list[j]]
 		}
 	}
 

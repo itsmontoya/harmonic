@@ -41,10 +41,10 @@ func (h *Harmonic) seek(key string, start, end int) (idx int, found bool) {
 		return h.seek(key, idx, end)
 	} else if key < h.s[idx].key {
 		return h.seek(key, start, idx)
-	} else {
-		found = true
-		return
 	}
+
+	found = true
+	return
 }
 
 func (h *Harmonic) iterFind(key string, start int) (idx int, found bool) {
@@ -81,22 +81,33 @@ func (h *Harmonic) Put(key string, val int) {
 	}
 
 	if idx > h.end {
-		h.s = append(h.s, &seekItem{key, val})
+		h.append(key, val)
 	} else if idx == -1 {
-		var ip *seekItem
-		for i, item := range h.s {
-			h.s[i] = ip
-			ip = item
-		}
-
-		h.s = append(h.s, ip)
-		h.s[0] = &seekItem{key, val}
+		h.prepend(key, val)
 	} else {
-		h.s = append(h.s[:idx], h.s[idx-1:]...)
-		h.s[idx] = &seekItem{key, val}
+		h.insert(idx, key, val)
 	}
 
 	h.end++
+}
+func (h *Harmonic) prepend(key string, val int) {
+	var ip *seekItem
+	for i, item := range h.s {
+		h.s[i] = ip
+		ip = item
+	}
+
+	h.s = append(h.s, ip)
+	h.s[0] = &seekItem{key, val}
+}
+
+func (h *Harmonic) append(key string, val int) {
+	h.s = append(h.s, &seekItem{key, val})
+}
+
+func (h *Harmonic) insert(idx int, key string, val int) {
+	h.s = append(h.s[:idx], h.s[idx-1:]...)
+	h.s[idx] = &seekItem{key, val}
 }
 
 // ForEach will iterate through each key and value within the data store
